@@ -1,0 +1,9 @@
+name: Magic
+description: Magical World of Winthier
+author: StarTux
+website: http://www.winthier.com
+version: 0.1
+main: com.winthier.magic.MagicPlugin
+depend: [ Custom, GenericEvents ]
+commands: {}
+permissions: {}
