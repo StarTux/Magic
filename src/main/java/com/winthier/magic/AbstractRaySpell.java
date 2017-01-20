@@ -6,9 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
-abstract class AbstractRaySpell implements Spell {
-    final MagicPlugin plugin;
+abstract class AbstractRaySpell extends AbstractSpell {
+    AbstractRaySpell(MagicPlugin plugin) {
+        super(plugin);
+    }
 
     public int getMaxDistance(WandConfig config) {
         return 128;

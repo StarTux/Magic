@@ -1,6 +1,8 @@
 package com.winthier.magic;
 
 import com.winthier.custom.event.CustomRegisterEvent;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,10 +15,12 @@ import org.bukkit.util.BlockIterator;
 
 public class MagicPlugin extends JavaPlugin implements Listener {
     final Random random = new Random(System.currentTimeMillis());
+    final Map<SpellType, Spell> spells = new EnumMap<>(SpellType.class);
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
+        for (SpellType spellType: SpellType.values()) spells.put(spellType, spellType.newInstance(this));
     }
 
     @EventHandler
@@ -38,5 +42,9 @@ public class MagicPlugin extends JavaPlugin implements Listener {
             if (dx*dx + dy*dy + dz*dz > sq) return null;
         }
         return null;
+    }
+
+    public Spell getSpell(SpellType spellType) {
+        return spells.get(spellType);
     }
 }

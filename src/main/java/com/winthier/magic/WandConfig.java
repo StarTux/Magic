@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class WandConfig {
+    final static String KEY_SELECTED_SPELL = "spell";
     final static String KEY_WAND_LEVEL = "level";
     final static String KEY_FREE_LEVELS = "free_levels";
     final CustomConfig config;
@@ -37,5 +38,19 @@ public class WandConfig {
 
     public void setFreeLevels(int freeLevels) {
         config.set(KEY_FREE_LEVELS, freeLevels);
+    }
+
+    public SpellType getSelectedSpell() {
+        String value = config.getString(KEY_SELECTED_SPELL, null);
+        if (value == null) return null;
+        try {
+            return SpellType.valueOf(value);
+        } catch (IllegalArgumentException iae) {
+            return null;
+        }
+    }
+
+    public void setSelectedSpell(SpellType spellType) {
+        config.set(KEY_SELECTED_SPELL, spellType.name());
     }
 }

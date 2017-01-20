@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @Getter
 class SnowstormSpell extends AbstractRaySpell {
     final SpellType spellType = SpellType.SNOWSTORM;
+    final String spellDisplayName = "Snowstorm";
     final int RADIUS = 4;
     final int EFFECT_DURATION = 10;
 

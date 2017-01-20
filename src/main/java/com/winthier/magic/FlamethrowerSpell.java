@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 @Getter
 class FlamethrowerSpell extends AbstractRaySpell {
     final SpellType spellType = SpellType.FLAMETHROWER;
+    final String spellDisplayName = "Flamethrower";
     final int RADIUS = 4;
 
     FlamethrowerSpell(MagicPlugin plugin) {
