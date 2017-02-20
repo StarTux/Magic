@@ -85,7 +85,8 @@ class SnowstormSpell extends AbstractRaySpell {
             Material above = block.getRelative(0, 1, 0).getType();
             if (above != Material.AIR) return;
             block.setType(Material.OBSIDIAN);
-        } else if (block.getType() == Material.WATER) {
+        } else if (block.getType() == Material.WATER ||
+                   block.getType() == Material.STATIONAR) {
             block.setType(Material.ICE);
         } else if (block.getType() == Material.FIRE) {
             block.setType(Material.AIR);
