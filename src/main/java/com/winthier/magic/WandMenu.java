@@ -36,10 +36,10 @@ public class WandMenu extends AbstractCustomInventory {
     void selectSpell(SpellType spellType) {
         ItemContext context = ItemContext.of(player.getInventory().getItemInMainHand());
         if (context == null) return;
-        WandConfig wandConfig = WandConfig.of(context.getConfig());
+        WandConfig wandConfig = WandConfig.of(context.config);
         // TODO check spell level
         wandConfig.setSelectedSpell(spellType);
-        context.getConfig().save(context.getItemStack());
+        context.config.save(context.itemStack);
     }
 
     void populateInventory() {
@@ -63,7 +63,7 @@ public class WandMenu extends AbstractCustomInventory {
     public void onInventoryOpen(InventoryOpenEvent event) {
         populateInventory();
     }
-    
+
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         event.setCancelled(true);

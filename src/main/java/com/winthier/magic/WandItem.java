@@ -51,7 +51,7 @@ public class WandItem implements CustomItem {
         switch (event.getAction()) {
         case LEFT_CLICK_AIR:
         case LEFT_CLICK_BLOCK:
-            WandConfig wandConfig = WandConfig.of(context.getConfig());
+            WandConfig wandConfig = WandConfig.of(context.config);
             SpellType spellType = wandConfig.getSelectedSpell();
             if (spellType == null) return;
             event.setCancelled(true);
@@ -60,7 +60,7 @@ public class WandItem implements CustomItem {
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
             event.setCancelled(true);
-            WandMenu menu = new WandMenu(plugin, event.getPlayer(), WandConfig.of(context.getConfig()));
+            WandMenu menu = new WandMenu(plugin, event.getPlayer(), WandConfig.of(context.config));
             CustomPlugin.getInstance().getInventoryManager().openInventory(event.getPlayer(), menu);
             break;
         }
@@ -75,7 +75,7 @@ public class WandItem implements CustomItem {
         if (!(event.getDamager() instanceof Player)) return;
         Player player = (Player)event.getDamager();
         ItemContext context = ItemContext.of(event);
-        WandConfig wandConfig = WandConfig.of(context.getConfig());
+        WandConfig wandConfig = WandConfig.of(context.config);
         SpellType spellType = wandConfig.getSelectedSpell();
         if (spellType == null) return;
         event.setCancelled(true);
