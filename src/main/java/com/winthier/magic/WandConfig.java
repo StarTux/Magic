@@ -1,47 +1,46 @@
 package com.winthier.magic;
 
-import com.winthier.custom.CustomConfig;
-import java.util.Map;
-import java.util.EnumMap;
+import com.winthier.custom.util.Dirty;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
-public class WandConfig {
-    final static String KEY_SELECTED_SPELL = "spell";
-    final static String KEY_WAND_LEVEL = "level";
-    final static String KEY_FREE_LEVELS = "free_levels";
-    final CustomConfig config;
+public final class WandConfig {
+    private static final String KEY_SELECTED_SPELL = "spell";
+    private static final String KEY_WAND_LEVEL = "level";
+    private static final String KEY_FREE_LEVELS = "free_levels";
+    private final Dirty.TagWrapper config;
 
-    public static WandConfig of(CustomConfig config) {
-        return new WandConfig(config);
+    public static WandConfig of(ItemStack item) {
+        return new WandConfig(Dirty.TagWrapper.itemConfigOf(item));
     }
 
     public int getSpellLevel(SpellType spell) {
-        return config.getInt(spell.key, 0);
+        return config.getInt(spell.key);
     }
 
     public void setSpellLevel(SpellType spell, int level) {
-        config.set(spell.key, level);
+        config.setInt(spell.key, level);
     }
 
     public int getWandLevel() {
-        return config.getInt(KEY_WAND_LEVEL, 0);
+        return config.getInt(KEY_WAND_LEVEL);
     }
 
     public void setWandLevel(int level) {
-        config.set(KEY_WAND_LEVEL, level);
+        config.setInt(KEY_WAND_LEVEL, level);
     }
 
     public int getFreeLevels() {
-        return config.getInt(KEY_FREE_LEVELS, 0);
+        return config.getInt(KEY_FREE_LEVELS);
     }
 
     public void setFreeLevels(int freeLevels) {
-        config.set(KEY_FREE_LEVELS, freeLevels);
+        config.setInt(KEY_FREE_LEVELS, freeLevels);
     }
 
     public SpellType getSelectedSpell() {
-        String value = config.getString(KEY_SELECTED_SPELL, null);
+        String value = config.getString(KEY_SELECTED_SPELL);
         if (value == null) return null;
         try {
             return SpellType.valueOf(value);
@@ -51,6 +50,6 @@ public class WandConfig {
     }
 
     public void setSelectedSpell(SpellType spellType) {
-        config.set(KEY_SELECTED_SPELL, spellType.name());
+        config.setString(KEY_SELECTED_SPELL, spellType.name());
     }
 }

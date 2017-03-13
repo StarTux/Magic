@@ -1,30 +1,35 @@
 package com.winthier.magic;
 
-import com.winthier.custom.inventory.AbstractCustomInventory;
-import com.winthier.custom.item.ItemContext;
+import com.winthier.custom.CustomPlugin;
+import com.winthier.custom.inventory.CustomInventory;
+import com.winthier.custom.util.Msg;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 @Getter
-public class WandMenu extends AbstractCustomInventory {
+public final class WandMenu implements CustomInventory {
+    private final MagicPlugin plugin;
+    private final Player player;
+    private final Inventory inventory;
+    private final WandConfig wandConfig;
+    private final List<Clickie> clickies = new ArrayList<>();
+
     class Clickie {
         void click() {
         }
         void shiftClick() {
         }
     }
-
-    final MagicPlugin plugin;
-    final Player player;
-    final Inventory inventory;
-    final WandConfig wandConfig;
-    final List<Clickie> clickies = new ArrayList<>();
 
     WandMenu(MagicPlugin plugin, Player player, WandConfig wandConfig) {
         this.plugin = plugin;
@@ -34,12 +39,50 @@ public class WandMenu extends AbstractCustomInventory {
     }
 
     void selectSpell(SpellType spellType) {
-        ItemContext context = ItemContext.of(player.getInventory().getItemInMainHand());
-        if (context == null) return;
-        WandConfig wandConfig = WandConfig.of(context.config);
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (CustomPlugin.getInstance().getItemManager().getCustomItem(item) != plugin.getWandItem()) return;
+        WandConfig itemConfig = WandConfig.of(item);
         // TODO check spell level
-        wandConfig.setSelectedSpell(spellType);
-        context.config.save(context.itemStack);
+        itemConfig.setSelectedSpell(spellType);
+    }
+
+    private Material getMenuIconMaterial(SpellType spellType) {
+        switch (spellType) {
+        case FLAMETHROWER: return Material.FIREWORK_CHARGE;
+        case SNOWSTORM: return Material.SNOW_BALL;
+        default: return Material.STONE;
+        }
+    }
+
+    private ItemStack getRawMenuIcon(SpellType spellType) {
+        Material mat = getMenuIconMaterial(spellType);
+        return new ItemStack(mat);
+    }
+
+    private String getSpellDisplayName(SpellType spellType) {
+        switch (spellType) {
+        case FLAMETHROWER: return "Flamethrower";
+        case SNOWSTORM: return "Snowstorm";
+        default: return "Spell";
+        }
+    }
+
+    public ItemStack getMenuIcon(SpellType spellType) {
+        int level = wandConfig.getSpellLevel(spellType);
+        ItemStack result;
+        // if (level <= 0) {
+        //     result = new ItemStack(Material.CHEST);
+        // } else {
+        result = getRawMenuIcon(spellType);
+            // result.setAmount(level);
+        // }
+        ItemMeta meta = result.getItemMeta();
+        for (ItemFlag flag: ItemFlag.values()) {
+            meta.addItemFlags(flag);
+        }
+        meta.setDisplayName(Msg.format("&r%s", getSpellDisplayName(spellType)));
+        result.setItemMeta(meta);
+        return result;
     }
 
     void populateInventory() {
@@ -55,7 +98,7 @@ public class WandMenu extends AbstractCustomInventory {
                     // TODO
                 }
             });
-            inventory.setItem(index, spellType.getInstance(plugin).getMenuIcon(wandConfig));
+            inventory.setItem(index, getMenuIcon(spellType));
         }
     }
 

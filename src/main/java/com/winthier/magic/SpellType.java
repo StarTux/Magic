@@ -2,8 +2,7 @@ package com.winthier.magic;
 
 public enum SpellType {
     FLAMETHROWER,
-    SNOWSTORM,
-    ;
+    SNOWSTORM;
 
     public final String key;
 
