@@ -12,7 +12,7 @@ public final class WandConfig {
     private final Dirty.TagWrapper config;
 
     public static WandConfig of(ItemStack item) {
-        return new WandConfig(Dirty.TagWrapper.itemConfigOf(item));
+        return new WandConfig(Dirty.TagWrapper.getItemConfigOf(item));
     }
 
     public int getSpellLevel(SpellType spell) {

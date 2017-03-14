@@ -4,6 +4,8 @@ import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
@@ -20,6 +22,9 @@ public final class Util {
         while (iter.hasNext()) {
             Block block = iter.next();
             if (block.getType() != Material.AIR) return block;
+            for (Entity e: block.getWorld().getNearbyEntities(block.getLocation().add(0.5, 0.5, 0.5), 1.0, 1.0, 1.0)) {
+                if (e != player && e instanceof LivingEntity) return block;
+            }
             int dx = center.getX() - block.getX();
             int dy = center.getY() - block.getY();
             int dz = center.getZ() - block.getZ();

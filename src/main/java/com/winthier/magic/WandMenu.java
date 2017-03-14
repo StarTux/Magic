@@ -50,6 +50,7 @@ public final class WandMenu implements CustomInventory {
         switch (spellType) {
         case FLAMETHROWER: return Material.FIREWORK_CHARGE;
         case SNOWSTORM: return Material.SNOW_BALL;
+        case GUST: return Material.DISPENSER;
         default: return Material.STONE;
         }
     }
@@ -63,6 +64,7 @@ public final class WandMenu implements CustomInventory {
         switch (spellType) {
         case FLAMETHROWER: return "Flamethrower";
         case SNOWSTORM: return "Snowstorm";
+        case GUST: return "Gust of Wind";
         default: return "Spell";
         }
     }
