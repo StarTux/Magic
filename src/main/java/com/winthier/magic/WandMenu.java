@@ -48,7 +48,7 @@ public final class WandMenu implements CustomInventory {
 
     private Material getMenuIconMaterial(SpellType spellType) {
         switch (spellType) {
-        case FLAMETHROWER: return Material.FIREWORK_CHARGE;
+        case FLAMETHROWER: return Material.FIREBALL;
         case SNOWSTORM: return Material.SNOW_BALL;
         case GUST: return Material.DISPENSER;
         default: return Material.STONE;
