@@ -46,9 +46,17 @@ final class FlamethrowerSpell implements Spell {
             Block block = center.getRelative(Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS),
                                              Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS),
                                              Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS));
-            if (block.getType() == Material.AIR
-                && GenericEventsPlugin.getInstance().playerCanBuild(player, block)) {
-                block.setType(Material.FIRE);
+            switch (block.getType()) {
+            case AIR:
+            case SNOW:
+            case LONG_GRASS:
+            case VINE:
+                if (GenericEventsPlugin.getInstance().playerCanGrief(player, block)) {
+                    block.setType(Material.FIRE);
+                }
+                break;
+            default:
+                break;
             }
         }
     }
