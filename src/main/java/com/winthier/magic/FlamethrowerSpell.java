@@ -41,11 +41,11 @@ final class FlamethrowerSpell implements Spell {
     }
 
     private void burnBlocks(Player player, Block center) {
-        final int amount = 64;
+        int amount = RADIUS * RADIUS * RADIUS;
         for (int i = 0; i < amount; ++i) {
-            Block block = center.getRelative(Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS),
-                                             Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS),
-                                             Util.RANDOM.nextInt(RADIUS) - Util.RANDOM.nextInt(RADIUS));
+            Block block = center.getRelative(Util.RANDOM.nextInt(RADIUS * 2) - RADIUS,
+                                             Util.RANDOM.nextInt(RADIUS * 2) - RADIUS,
+                                             Util.RANDOM.nextInt(RADIUS * 2) - RADIUS);
             switch (block.getType()) {
             case AIR:
             case SNOW:
@@ -72,8 +72,7 @@ final class FlamethrowerSpell implements Spell {
 
     private void playEffect(Location location) {
         double dst = (double)RADIUS;
-        double hdst = dst * 0.5;
-        location.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location, 16, hdst, hdst, hdst);
-        location.getWorld().playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.2f);
+        location.getWorld().spawnParticle(Particle.LAVA, location, RADIUS * RADIUS * RADIUS / 2, dst, dst, dst);
+        location.getWorld().playSound(location, Sound.ITEM_FIRECHARGE_USE, 1.0f, 0.6f);
     }
 }
