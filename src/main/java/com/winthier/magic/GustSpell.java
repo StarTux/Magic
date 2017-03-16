@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -24,7 +25,7 @@ public final class GustSpell implements Spell {
 
     @Override
     public boolean castSpell(WandConfig config, Player player, Block clickedBlock, Entity clickedEntity) {
-        Block block;
+        final Block block;
         final Location location;
         if (clickedBlock != null) {
             block = clickedBlock;
@@ -75,6 +76,18 @@ public final class GustSpell implements Spell {
                         if (!entity.isValid()) continue;
                         Location location = entity.getLocation();
                         location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0.0, 0.0, 0.0, 0.0);
+                    }
+                }
+                for (int i = 0; i < 60; ++i) {
+                    Block randomBlock = block.getRelative(Util.RANDOM.nextInt(RADIUS * 2) - RADIUS,
+                                                          Util.RANDOM.nextInt(RADIUS * 2) - RADIUS,
+                                                          Util.RANDOM.nextInt(RADIUS * 2) - RADIUS);
+                    switch (randomBlock.getType()) {
+                    case FIRE:
+                        randomBlock.setType(Material.AIR);
+                        break;
+                    default:
+                        break;
                     }
                 }
                 ticks += 1;
