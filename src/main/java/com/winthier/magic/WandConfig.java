@@ -9,6 +9,7 @@ public final class WandConfig {
     private static final String KEY_SELECTED_SPELL = "spell";
     private static final String KEY_WAND_LEVEL = "level";
     private static final String KEY_FREE_LEVELS = "free_levels";
+    private static final String KEY_LAST_USE = "last_use";
     private final Dirty.TagWrapper config;
 
     public static WandConfig of(ItemStack item) {
@@ -51,5 +52,13 @@ public final class WandConfig {
 
     public void setSelectedSpell(SpellType spellType) {
         config.setString(KEY_SELECTED_SPELL, spellType.name());
+    }
+
+    public long getLastUse() {
+        return config.getLong(KEY_LAST_USE);
+    }
+
+    public void setLastUse(long lastUse) {
+        config.setLong(KEY_LAST_USE, lastUse);
     }
 }

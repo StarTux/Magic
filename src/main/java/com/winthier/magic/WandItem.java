@@ -6,7 +6,10 @@ import com.winthier.custom.item.ItemContext;
 import com.winthier.custom.util.Msg;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,6 +26,7 @@ public class WandItem implements CustomItem {
     private final MagicPlugin plugin;
     private final String customId = "magic:wand";
     private final ItemStack itemStack;
+    private static final long COOLDOWN = 10000L;
 
     WandItem(MagicPlugin plugin) {
         this.plugin = plugin;
@@ -46,11 +50,8 @@ public class WandItem implements CustomItem {
         switch (event.getAction()) {
         case LEFT_CLICK_AIR:
         case LEFT_CLICK_BLOCK:
-            WandConfig wandConfig = WandConfig.of(context.getItemStack());
-            SpellType spellType = wandConfig.getSelectedSpell();
-            if (spellType == null) return;
             event.setCancelled(true);
-            spellType.getInstance(plugin).castSpell(wandConfig, event.getPlayer(), event.getClickedBlock(), null);
+            castSpell(event.getPlayer(), context, event.getClickedBlock(), null);
             break;
         case RIGHT_CLICK_AIR:
         case RIGHT_CLICK_BLOCK:
@@ -69,12 +70,30 @@ public class WandItem implements CustomItem {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event, ItemContext context) {
+        event.setCancelled(true);
         if (!(event.getDamager() instanceof Player)) return;
-        Player player = (Player)event.getDamager();
+        castSpell((Player)event.getDamager(), context, null, event.getEntity());
+    }
+
+    void castSpell(Player player, ItemContext context, Block block, Entity entity) {
         WandConfig wandConfig = WandConfig.of(context.getItemStack());
         SpellType spellType = wandConfig.getSelectedSpell();
-        if (spellType == null) return;
-        event.setCancelled(true);
-        spellType.getInstance(plugin).castSpell(wandConfig, player, null, event.getEntity());
+        if (spellType == null) {
+            player.playSound(player.getEyeLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.7f);
+            Msg.sendActionBar(player, "&4No spell selected!");
+        } else {
+            long now = System.currentTimeMillis();
+            long lastUse = wandConfig.getLastUse();
+            if (lastUse + COOLDOWN > now) {
+                player.playSound(player.getEyeLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.7f);
+                long seconds = (lastUse + COOLDOWN - now - 1) / 1000L + 1;
+                Msg.sendActionBar(player, "&4Wand on cooldown for %d seconds!", seconds);
+            } else if (spellType.getInstance(plugin).castSpell(wandConfig, player, block, entity)) {
+                player.playSound(player.getEyeLocation(), Sound.ENTITY_WITCH_THROW, 1.0f, 2.0f);
+                wandConfig.setLastUse(now);
+            } else {
+                player.playSound(player.getEyeLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 2.0f);
+            }
+        }
     }
 }
