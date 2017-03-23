@@ -3,6 +3,7 @@ package com.winthier.magic;
 import com.winthier.custom.CustomPlugin;
 import com.winthier.custom.item.CustomItem;
 import com.winthier.custom.item.ItemContext;
+import com.winthier.custom.item.NoCraftingItem;
 import com.winthier.custom.util.Msg;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 @Getter
-public class WandItem implements CustomItem {
+public final class WandItem implements CustomItem, NoCraftingItem {
     private final MagicPlugin plugin;
     private final String customId = "magic:wand";
     private final ItemStack itemStack;
